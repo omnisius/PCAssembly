@@ -6,8 +6,6 @@ public class PC {
     private String motherboard;
     private String HDD;
     private String RAM;
-    private boolean isGraphicsCardEnabled;
-    private boolean isBluetoothEnabled;
 
     public String getCPU() {
         return CPU;
@@ -25,21 +23,22 @@ public class PC {
         return RAM;
     }
 
-    public boolean isGraphicsCardEnabled() {
-        return isGraphicsCardEnabled;
-    }
-
-    public boolean isBluetoothEnabled() {
-        return isBluetoothEnabled;
-    }
 
     private PC (PCBuilder builder) {
         this.CPU = builder.CPU;
         this.RAM = builder.RAM;
         this.HDD = builder.HDD;
         this.RAM = builder.RAM;
-        this.isGraphicsCardEnabled=builder.isGraphicsCardEnabled;
-        this.isBluetoothEnabled=builder.isBluetoothEnabled;
+    }
+
+    @Override
+    public String toString() {
+        return "PC{" +
+                "CPU='" + CPU + '\'' +
+                ", motherboard='" + motherboard + '\'' +
+                ", HDD='" + HDD + '\'' +
+                ", RAM='" + RAM + '\'' +
+                '}';
     }
 
     public static class PCBuilder {
@@ -47,29 +46,29 @@ public class PC {
         private String motherboard;
         private String HDD;
         private String RAM;
-        private boolean isGraphicsCardEnabled;
-        private boolean isBluetoothEnabled;
 
-        public PCBuilder(String cpu, String motherboard, String hdd, String ram) {
+        public PCBuilder addCPU(String cpu) {
             this.CPU = cpu;
-            this.motherboard = motherboard;
-            this.HDD = hdd;
-            this.RAM = ram;
-        }
-
-        public PCBuilder setGraphicsCardEnabled(boolean isGraphicsCardEnabled) {
-            this.isGraphicsCardEnabled = isGraphicsCardEnabled;
             return this;
         }
 
-        public PCBuilder setBluetoothEnabled(boolean isBluetoothEnabled) {
-            this.isBluetoothEnabled = isBluetoothEnabled;
+        public PCBuilder addMotherBoard(String motherboard) {
+            this.motherboard = motherboard;
+            return this;
+        }
+
+        public PCBuilder addHDD(String hdd) {
+            this.HDD = hdd;
+            return this;
+        }
+
+        public PCBuilder addRAM(String ram) {
+            this.RAM = ram;
             return this;
         }
 
         public PC build(){
             return new PC(this);
         }
-
     }
 }
