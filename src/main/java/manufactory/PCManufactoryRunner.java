@@ -1,11 +1,10 @@
 package manufactory;
 
+import actors.ChiefActor;
 import actors.EngineerActor;
 import actors.HucksterActor;
-import actors.OutspokenActor;
 import akka.actor.ActorRef;
 import akka.actor.ActorSystem;
-import akka.actor.PoisonPill;
 import akka.actor.Props;
 import akka.util.Timeout;
 import model.PC;
@@ -20,34 +19,42 @@ import static akka.pattern.PatternsCS.pipe;
 
 public class PCManufactoryRunner {
 
+    public static final String PC_MANUFACTORY = "PCManufactory";
+    public static final String HUCKSTER = "Huckster";
+    public static final String ENGINEER = "Engineer";
+    public static final String CHIEF_ENGINEER = "ChiefEngineer";
+
     public static void main(String[] args) throws ExecutionException, InterruptedException {
 
-        PC.PCBuilder buildingPC = new PC.PCBuilder();
-        ActorSystem system = ActorSystem.create("PCManufactory");
-        ActorRef huckster = system.actorOf(Props.create(HucksterActor.class), "huckster");
+        ActorSystem system = ActorSystem.create(PC_MANUFACTORY);
+        ActorRef huckster = system.actorOf(Props.create(HucksterActor.class), HUCKSTER);
 
-        CompletableFuture<Object> hucksterFuture = ask(huckster, "Is detail good for your?", 1000).toCompletableFuture();
+        CompletableFuture<Object> hucksterFuture = ask(huckster, "hdd", 1000).toCompletableFuture();
 
         System.out.println(hucksterFuture.get());
 
-        ActorRef engineer = system.actorOf(Props.create(EngineerActor.class), "Engineer");
+        ActorRef engineer = system.actorOf(Props.create(EngineerActor.class), ENGINEER);
         Timeout slowEngineer = new Timeout(Duration.create(2, TimeUnit.SECONDS));
         CompletableFuture<Object> engineerFuture = ask(huckster, "Yes. Detail is good. We may add it to our PC", slowEngineer)
                 .toCompletableFuture();
 
-        CompletableFuture<PoisonPill> chiefEngineerFuture =
+        CompletableFuture<PC.PCBuilder> chiefEngineerFuture =
                 CompletableFuture.allOf(hucksterFuture, engineerFuture)
                         .thenApply(v -> {
+                            PC.PCBuilder currentPC = new PC.PCBuilder();
                             hucksterFuture.join();
+
                             engineerFuture.join();
-                            return PoisonPill.getInstance();
+
+                            return currentPC;
                         });
 
 
-        ActorRef chiefEngineer = system.actorOf(Props.create(OutspokenActor.class), "chiefEngineer");
+        ActorRef chiefEngineer = system.actorOf(Props.create(ChiefActor.class), CHIEF_ENGINEER);
 
         pipe(chiefEngineerFuture, system.dispatcher()).to(chiefEngineer);
         Thread.sleep(3000);
-        System.out.println("PC is done "  );
+        if (chiefEngineerFuture.isDone())
+            System.out.println("PC is done " + chiefEngineerFuture.get().build());
     }
 }
