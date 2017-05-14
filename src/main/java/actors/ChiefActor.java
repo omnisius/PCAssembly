@@ -11,7 +11,7 @@ public class ChiefActor extends AbstractActor {
     public Receive createReceive() {
         return receiveBuilder()
                 .match(String.class, s -> log.info("Received String message: {} from {}", s, this.sender()))
-                .matchAny(o -> log.info(this.self() + " received unknown message"))
+                .matchAny(o -> log.info(this.self() + " received unknown message" + o))
                 .build();
     }
 }

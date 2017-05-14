@@ -11,10 +11,10 @@ public class HucksterActor extends AbstractActor {
     public Receive createReceive() {
         return receiveBuilder()
                 .match(String.class, s -> {
-                    this.getSender().tell("Received PC part: '" + s + "'", this.self());
+                    this.getSender().tell("Can sell you PC part: '" + s + "'", this.self());
                     log.info("Received PC part: {}", s);
                 })
-                .matchAny(o -> log.info(this.self().toString() + " received unknown part"))
+                .matchAny(o -> log.info(this.self().toString() + " received unknown part" + o))
                 .build();
     }
 }
