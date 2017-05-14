@@ -14,7 +14,6 @@ public class HucksterActor extends AbstractActor {
                     this.getSender().tell("Can sell you PC part: '" + s + "'", this.self());
                     log.info("Received PC part: {}", s);
                 })
-                .matchAny(o -> log.info(this.self().toString() + " received unknown part" + o))
                 .build();
     }
 }

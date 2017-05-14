@@ -28,7 +28,7 @@ public class PC {
         this.CPU = builder.CPU;
         this.RAM = builder.RAM;
         this.HDD = builder.HDD;
-        this.RAM = builder.RAM;
+        this.motherboard = builder.motherboard;
     }
 
     @Override

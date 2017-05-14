@@ -22,6 +22,8 @@ public class EngineerActor extends AbstractActor {
                         currentPC.addHDD(s.replace("HDD:", ""));
                     } else if (s.startsWith("CPU")) {
                         currentPC.addCPU(s.replace("CPU:", ""));
+                    } else if (s.startsWith("MB")) {
+                        currentPC.addMotherBoard(s.replace("MB:", ""));
                     } else if (s.startsWith("RAM")) {
                         currentPC.addRAM(s.replace("RAM:", ""));
                     }
