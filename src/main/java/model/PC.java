@@ -2,6 +2,7 @@ package model;
 
 public class PC {
 
+    private int id;
     private String CPU;
     private String motherboard;
     private String HDD;
@@ -25,6 +26,7 @@ public class PC {
 
 
     private PC (PCBuilder builder) {
+        this.id = builder.id;
         this.CPU = builder.CPU;
         this.RAM = builder.RAM;
         this.HDD = builder.HDD;
@@ -33,7 +35,7 @@ public class PC {
 
     @Override
     public String toString() {
-        return "PC{" +
+        return "PC" + id + "{" +
                 "CPU='" + CPU + '\'' +
                 ", motherboard='" + motherboard + '\'' +
                 ", HDD='" + HDD + '\'' +
@@ -42,10 +44,15 @@ public class PC {
     }
 
     public static class PCBuilder {
+        private int id;
         private String CPU;
         private String motherboard;
         private String HDD;
         private String RAM;
+
+        public PCBuilder(int id) {
+            this.id = id;
+        }
 
         public PCBuilder addCPU(String cpu) {
             this.CPU = cpu;
