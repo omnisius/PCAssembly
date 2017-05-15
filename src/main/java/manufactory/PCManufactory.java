@@ -9,8 +9,7 @@ import akka.actor.ActorSystem;
 import akka.actor.Props;
 import model.PC;
 
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
+import java.util.concurrent.*;
 
 import static akka.pattern.PatternsCS.ask;
 import static akka.pattern.PatternsCS.pipe;
@@ -27,16 +26,15 @@ class PCManufactory {
     private static final String CPU_MODEl = "CPU:Intel Core i5";
     private static final String MOTHERBOARD_MODEl = "MB:SMTH13";
     private static final String RAM_MODEl = "RAM:8 Gb DDR3 L";
-    private static final int TIMEOUT_HUCKSTER = 100;
-    private static final int TIMEOUT_ENGINEER = 2000;
-    private static final int PLANNED_QUANTITY = 10;
+    private static final int TIMEOUT_HUCKSTER = 2;
+    private static final int TIMEOUT_ENGINEER = 1;
+    private static final int PLANNED_QUANTITY = 100000;
 
     static void startPCLine()  throws ExecutionException, InterruptedException {
         ActorSystem system = ActorSystem.create(PC_MANUFACTORY);
         ActorRef chiefEngineer = system.actorOf(Props.create(ChiefActor.class), CHIEF_ENGINEER);
         ActorRef engineer = system.actorOf(Props.create(EngineerActor.class), ENGINEER);
         ActorRef huckster = system.actorOf(Props.create(HucksterActor.class), HUCKSTER);
-
         for (int pcNumber = 0; pcNumber < PLANNED_QUANTITY; pcNumber++) {
             createPC(system, chiefEngineer, engineer, huckster, pcNumber);
         }
